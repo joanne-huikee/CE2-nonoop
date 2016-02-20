@@ -15,24 +15,27 @@ import java.io.IOException;
  * 
  * @author joanne
  * 
- *         CS2103 CE1 
- *         This class is used for editing a given parameter(textfile) based on user command. 
- *         The commands available for TextBuddy are add, delete, display and clear. 
- *         add <string>: appends a new string(all the words following the add command)to the text file 
- *         display: displays all lines, with their respective line number (following
- *         chronological order, the order in which they are keyed in), present in the file. 
- *         delete <int>: delete the line in the file which corresponds to the line number specified by user 
- *         clear: empty the file
+ *         CS2103 CE1 This class is used for editing a given parameter(textfile)
+ *         based on user command. The commands available for TextBuddy are add,
+ *         delete, display and clear. add <string>: appends a new string(all the
+ *         words following the add command)to the text file display: displays
+ *         all lines, with their respective line number (following chronological
+ *         order, the order in which they are keyed in), present in the file.
+ *         delete <int>: delete the line in the file which corresponds to the
+ *         line number specified by user clear: empty the file
  * 
- *         Assumptions: 
- *         1) All other commands are regarded as invalid command and will not be perform when specified by user. 
- *         2) An invalid and re-enter command prompt will be given when an invalid command was entered. 
- *         3) When an unavailable line number was entered for deletion, an error prompt will be given.
- *         4) For clear and display command, as long as the command keyword is entered correctly (the first word
- *          is clear/display), the command will be performed regardless of what data were behind it.
- *          eg. clear bbchfkag will still result in the file being cleared. 
- *         5)File is saved to disk after each user operation to prevent loss of data from unintended termination 
- *         since no "are u sure?" prompt will be given to double confirm the user operation that was meant to be carried out.
+ *         Assumptions: 1) All other commands are regarded as invalid command
+ *         and will not be perform when specified by user. 2) An invalid and
+ *         re-enter command prompt will be given when an invalid command was
+ *         entered. 3) When an unavailable line number was entered for deletion,
+ *         an error prompt will be given. 4) For clear and display command, as
+ *         long as the command keyword is entered correctly (the first word is
+ *         clear/display), the command will be performed regardless of what data
+ *         were behind it. eg. clear bbchfkag will still result in the file
+ *         being cleared. 5)File is saved to disk after each user operation to
+ *         prevent loss of data from unintended termination since no
+ *         "are u sure?" prompt will be given to double confirm the user
+ *         operation that was meant to be carried out.
  */
 
 public class TextBuddy {
@@ -314,7 +317,7 @@ public class TextBuddy {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private static void sortAlpha(File userFile) {
 		String line = null;
 		Vector<String> temp = new Vector<String>();
@@ -330,7 +333,7 @@ public class TextBuddy {
 		} catch (IOException ex) {
 			showFeedbackMsg(MESSAGE_ERROR);
 		}
-		Collections.sort(temp,String.CASE_INSENSITIVE_ORDER);
+		Collections.sort(temp, String.CASE_INSENSITIVE_ORDER);
 		emptyFile(userFile);
 		appendBackNonDeleted(temp, userFile);
 		showFeedbackMsg(String.format(MESSAGE_SORT, userFile.getName()));
@@ -357,7 +360,7 @@ public class TextBuddy {
 			while ((line = br.readLine()) != null) {
 				lineNum++;
 				if (Pattern.compile(Pattern.quote(searchInput), Pattern.CASE_INSENSITIVE).matcher(line).find()) {
-					storeToTemp(temp,lineNum +". " + line);
+					storeToTemp(temp, lineNum + ". " + line);
 				}
 			}
 			br.close();
@@ -377,7 +380,7 @@ public class TextBuddy {
 				System.out.println(i.next().toString());
 			}
 		}
-	}	
+	}
 
 	private static void exit() {
 		System.exit(0);
