@@ -2,6 +2,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Scanner;
 import java.util.Vector;
+import java.util.regex.Pattern;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -329,7 +330,7 @@ public class TextBuddy {
 		} catch (IOException ex) {
 			showFeedbackMsg(MESSAGE_ERROR);
 		}
-		Collections.sort(temp);
+		Collections.sort(temp,String.CASE_INSENSITIVE_ORDER);
 		emptyFile(userFile);
 		appendBackNonDeleted(temp, userFile);
 		showFeedbackMsg(String.format(MESSAGE_SORT, userFile.getName()));
@@ -355,7 +356,7 @@ public class TextBuddy {
 			BufferedReader br = new BufferedReader(fr);
 			while ((line = br.readLine()) != null) {
 				lineNum++;
-				if (line.contains(searchInput)) {
+				if (Pattern.compile(Pattern.quote(searchInput), Pattern.CASE_INSENSITIVE).matcher(line).find()) {
 					storeToTemp(temp,lineNum +". " + line);
 				}
 			}
