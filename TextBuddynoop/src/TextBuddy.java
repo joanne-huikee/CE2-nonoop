@@ -1,3 +1,4 @@
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Scanner;
 import java.util.Vector;
@@ -45,10 +46,14 @@ public class TextBuddy {
 	private static final String MESSAGE_DELETE = "deleted from %1$s: \"%2$s\"";
 	private static final String MESSAGE_INVALID_DELETE = "Invalid command. There is no line %1$s for deletion";
 	private static final String MESSAGE_CLEAR = "all content deleted from %1$s";
+	private static final String MESSAGE_SORT = "%1$s has been sorted alphabetically";
 	private static final String COMMAND_ADD = "add";
 	private static final String COMMAND_DISPLAY = "display";
 	private static final String COMMAND_DELETE = "delete";
 	private static final String COMMAND_CLEAR = "clear";
+	private static final String COMMAND_SORT = "sort";
+	private static final String COMMAND_SEARCH = "search";
+
 	private static final String COMMAND_EXIT = "exit";
 
 	public static void main(String args[]) {
@@ -131,6 +136,12 @@ public class TextBuddy {
 			break;
 		case COMMAND_CLEAR:
 			clear(userFile);
+			break;
+		case COMMAND_SORT:
+			sortAlpha(userFile);
+			break;
+		case COMMAND_SEARCH:
+			search(commandLine, userFile);
 			break;
 		case COMMAND_EXIT:
 			exit();
@@ -302,6 +313,70 @@ public class TextBuddy {
 			e.printStackTrace();
 		}
 	}
+	
+	private static void sortAlpha(File userFile) {
+		String line = null;
+		Vector<String> temp = new Vector<String>();
+		try {
+			FileReader fr = new FileReader(userFile);
+			BufferedReader br = new BufferedReader(fr);
+			while ((line = br.readLine()) != null) {
+				storeToTemp(temp, line);
+			}
+			br.close();
+		} catch (FileNotFoundException ex) {
+			showFeedbackMsg(MESSAGE_ERROR);
+		} catch (IOException ex) {
+			showFeedbackMsg(MESSAGE_ERROR);
+		}
+		Collections.sort(temp);
+		emptyFile(userFile);
+		appendBackNonDeleted(temp, userFile);
+		showFeedbackMsg(String.format(MESSAGE_SORT, userFile.getName()));
+	}
+
+	private static void search(String commandLine, File userFile) {
+		Vector<String> temp = new Vector<String>();
+		String searchInput = getWordForSearch(commandLine);
+		findAndStore(searchInput, temp, userFile);
+		printSearchedLine(temp);
+	}
+
+	private static String getWordForSearch(String commandLine) {
+		String searchInput = commandLine.replace(getActionWord(commandLine), " ");
+		return searchInput.trim();
+	}
+
+	private static void findAndStore(String searchInput, Vector<String> temp, File userFile) {
+		String line = null;
+		int lineNum = 0;
+		try {
+			FileReader fr = new FileReader(userFile);
+			BufferedReader br = new BufferedReader(fr);
+			while ((line = br.readLine()) != null) {
+				lineNum++;
+				if (line.contains(searchInput)) {
+					storeToTemp(temp,lineNum +". " + line);
+				}
+			}
+			br.close();
+		} catch (FileNotFoundException ex) {
+			showFeedbackMsg(MESSAGE_ERROR);
+		} catch (IOException ex) {
+			showFeedbackMsg(MESSAGE_ERROR);
+		}
+	}
+
+	private static void printSearchedLine(Vector<String> temp) {
+		Iterator<String> i = temp.iterator();
+		if (temp.isEmpty()) {
+			System.out.println("No match found for search");
+		} else {
+			while (i.hasNext()) {
+				System.out.println(i.next().toString());
+			}
+		}
+	}	
 
 	private static void exit() {
 		System.exit(0);
